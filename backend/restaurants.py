@@ -19,19 +19,46 @@ použije se obecná heuristika (parsers/generic.py), která z textu stránky hle
 řádky s cenou (např. "Svíčková na smetaně ... 159 Kč"). Funguje překvapivě
 dobře na jednoduché weby, ale u složitějších (např. menu jako obrázek, PDF,
 nebo JS aplikace) bude potřeba napsat vlastní parser na míru.
+Volitelné klíče:
+{
+    "fetch": "headless",    # jinak výchozí "static" (obyčejný requests.get)
+    "click_text": "...",    # text tlačítka/tabu, na který má headless prohlížeč před čtením kliknout
+}
+
+Restaurace s "fetch": "headless" se otevírají přes neviditelný prohlížeč
+(Playwright) - používá se u webů, které svůj obsah dotahují/vykreslují až
+přes JavaScript, takže obyčejné stažení HTML na nich nic nenajde. Je to
+pomalejší a náročnější na zdroje, proto se používá jen tam, kde to jinak
+nejde - viz poznámky u Zlatého klasu a Smíchovské krčmy níže.
 """
 
 RESTAURANTS = [
-    # Smíchovská krčma zatím vynechána - denní menu mají jen jako obrázek,
-    # ne jako text, takže by appka ukazovala jejich celý stálý jídelní
-    # lístek místo skutečné denní nabídky. Můžeme ji přidat zpátky, až
-    # vyřešíme čtení menu z obrázku (OCR).
-    #
-    # Zlatý klas (https://zlatyklas.cz/#denni-menu) zatím taky vynechán -
-    # jejich "Denní menu" sekce se plní až přes JavaScript po načtení
-    # stránky, takže v prostém HTML (co vidí náš scraper) je prázdná, a to
-    # i ve všední den. Řešení = headless prohlížeč (Playwright), zatím
-    # neřešeno.
+    {
+        "id": "zlaty-klas",
+        "name": "Zlatý klas",
+        "menu_url": "https://zlatyklas.cz/#denni-menu",
+        "address": "Plzeňská 9, Praha 5 (Palác Křižík - Anděl)",
+        "parser": "generic",
+        "fetch": "headless",
+        # EXPERIMENTÁLNÍ: sekce "Denní menu" se plní až přes JavaScript,
+        # takže to zkoušíme přes headless prohlížeč. Nemáme jak si ověřit
+        # přesnou strukturu předem - uvidíme podle výsledku na Renderu,
+        # jestli obecná heuristika (hledání řádků s cenou) stačí, nebo
+        # bude potřeba parser na míru.
+    },
+    {
+        "id": "smichovska-krcma",
+        "name": "Smíchovská krčma",
+        "menu_url": "https://smichovska-krcma.cz/jidelni-listek",
+        "address": "Na Čečeličce 402/12, Praha 5",
+        "parser": "generic",
+        "fetch": "headless",
+        "click_text": "Polední menu",
+        # EXPERIMENTÁLNÍ: appka otevře stránku, počká, klikne na tab
+        # "Polední menu" a teprve pak čte obsah. Mimo dobu výdeje menu
+        # web sám hlásí, že menu teď není k dispozici - v tom případě
+        # appka správně ukáže "menu se nenašlo", není to chyba.
+    },
     {
         "id": "corleone-andel",
         "name": "Corleone Anděl",
