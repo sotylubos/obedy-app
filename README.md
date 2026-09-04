@@ -48,6 +48,35 @@ vidí bez ručního refreshe.
 Hlasy se nikde ručně nemažou — pro nový den se automaticky počítají znovu,
 protože se filtrují podle dnešního data.
 
+## Restaurace s JavaScriptem (Zlatý klas, Smíchovská krčma)
+
+Tyhle dvě restaurace mají denní menu, které se dotahuje/vykresluje až přes
+JavaScript v prohlížeči - obyčejné stažení HTML na nich nic nenajde. Appka
+proto pro ně používá neviditelný prohlížeč (Playwright/Chromium), který
+stránku skutečně otevře, počká na JS a teprve pak čte výsledek. Je to
+experimentální řešení - nemáme jak si dopředu ověřit přesnou strukturu
+těch stránek, takže první ostrá zkouška proběhne až po nasazení. Pokud
+appka u nich hlásí "menu se nenašlo" i v době, kdy menu podávají, pošli mi
+vědět a parser pro danou restauraci doladíme.
+
+**Důležité: aby tohle na Renderu fungovalo, je potřeba upravit Build
+Command appky** (nejen `pip install -r requirements.txt`), protože se
+musí navíc stáhnout samotný prohlížeč Chromium:
+
+1. Na Renderu otevři appku `obedy-app` → **Settings**.
+2. Najdi pole **Build Command** a nastav ho na:
+   ```
+   pip install -r requirements.txt && playwright install --with-deps chromium
+   ```
+3. Ulož změny (**Save Changes**) - Render appku znovu nasadí s novým
+   nastavením. Build bude tentokrát o dost pomalejší (stahuje se prohlížeč),
+   klidně pár minut.
+
+Tohle je zátěžnější na paměť i čas buildu než zbytek appky, takže pokud by
+to na free tieru dělalo problémy (build selže, appka spadne na nedostatek
+paměti), dáme vědět a buď to doladíme, nebo tyhle dvě restaurace zase
+dočasně vypneme.
+
 ## Nasazení mimo localhost
 
 Pro trvalý provoz (např. na malém serveru nebo Raspberry Pi):
