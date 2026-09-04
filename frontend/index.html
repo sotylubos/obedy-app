@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Co se dnes vaří</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+<header class="board">
+  <div class="board__inner">
+    <p class="board__kicker">Náš tým &middot; pracovní dny</p>
+    <h1 class="board__title">Co se dnes vaří</h1>
+    <p class="board__sub">Denní menu vybraných podniků. Zahlasuj, kam by ses chtěl/a dnes vydat.</p>
+  </div>
+</header>
+
+<main class="slips" id="slips">
+  <p class="status" id="status">Načítám dnešní nabídku…</p>
+</main>
+
+<footer class="footer">
+  <button class="refresh-btn" id="refresh-btn">Stáhnout znovu</button>
+  <p class="footer__note">Data pocházejí z webů jednotlivých restaurací. Ceny se mohou lišit od skutečnosti u pokladny.</p>
+</footer>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
